@@ -85,3 +85,48 @@ add_legend <- function(...) {
 add_legend("topright", legend=c("Min", "Max", "Mean"), pch=20, 
            col=c("red", "green", "blue"),
            horiz=TRUE, bty='n', cex=0.8)
+
+###################################################
+# Geometric Brownian motion                       #
+###################################################
+
+totaldrift = 0
+for (value in c(1:nrow(df_clean)-1)){
+    drift = (df_clean[value, 1] - df_clean[value+1, 1])/df_clean[value+1, 1]
+    totaldrift = append(totaldrift, drift)
+}
+totaldrift = totaldrift[2:length(totaldrift)]
+
+
+output=0
+mu = mean(totaldrift)
+sigma = sd(totaldrift)
+tend = nrow(df_clean)
+S1 = df_clean[1,1]
+for (t in c(1:tend)){
+St = S1 * exp((mu + (sigma**2)/2 ) * t)
+output <- append(output, St)
+print(paste0(c('Time = ', 'Value = '), c(t, St)))
+}
+output = output[2:length(output)]
+
+
+
+logoutput = 0
+for(t in c(1:tend)){
+    logStS1 = (mu + (sigma**2)/2) * t
+    logoutput <- append(logoutput, logStS1)
+    print(paste0(c('Time = ', 'Value = '), c(t, logStS1)))
+}
+logoutput = logoutput[2:length(logoutput)]
+
+library(somebm)
+b <- gbm(x0 = S1,
+    mu = mu,
+    sigma = sigma,
+    t0 = 1,
+    t = tend+5,
+    n=241+5)
+print(b)
+plot(b)
+
