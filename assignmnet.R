@@ -45,7 +45,16 @@ axis(side=2, lwd=0.1,
      cex.axis=0.4)
 
 ### Desnity Plot ###
-plot(density(df_clean$Value))
+plot(density(df_clean$Value),
+     main = "Density distribution for weather data")
+abline(v=mean(df_clean$Value), col='blue')
+abline(v=min(df_clean$Value), col='red')
+abline(v=max(df_clean$Value), col='green')
+abline(v=mean(df_clean$Value) - sd(df_clean$Value), col='orange', lty=2)
+abline(v=mean(df_clean$Value) + sd(df_clean$Value), col='orange', lty=2)
+add_legend("topright", legend=c("Min", "Max", "Mean", "1 Std far"), pch=20, 
+           col=c("red", "green", "blue", "orange"),
+           horiz=TRUE, bty='n', cex=0.8)
 
 ### Weather Plot ###
 plot(c(1:nrow(df_clean)), 
